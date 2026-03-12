@@ -1,0 +1,140 @@
+# ============================================================
+# train_nsn.py  --  Stage 2 (NSN / Memory Bank) | MVTec-3D AD
+# ============================================================
+
+# ── Dataset ─────────────────────────────────────────────────
+dataset_type: mvtec
+dataset_path: ./datasets
+output_dir: ./outputs
+camera_param_route: ./datasets/mvtec/
+
+# ── Checkpoint paths ─────────────────────────────────────────
+visual_encoder_ckpt_pth: ./checkpoints/vit_base_patch8_224_dino.pth
+point_encoder_ckpt_pth:  ./checkpoints/pointmae_pretrain.pth
+# Where to LOAD Stage-1 weights from
+stage1_ckpt_subdir: 1st_stage_mvtec
+# Naming convention for Stage-1 checkpoint files:
+#   RGB : {class_name}_best_jepa_rgb_dino_main_{npred}blocks_full_0.01.pth
+#   XYZ : {class_name}_best_jepa_xyz_pmae_main_{npred}blocks_full_0.01.pth
+# Where to SAVE Stage-2 memory-bank weights
+stage2_ckpt_subdir: 2nd_stage_mvtec
+
+# ── Model sizes ──────────────────────────────────────────────
+visual_encoder_size: base
+point_encoder_size:  base
+encoder_size:        vit_small
+predictor_depth:     2
+
+# ── Training defaults ────────────────────────────────────────
+batch_size:          1
+num_epochs:          5
+num_workers:         4
+k_shot:              -1
+
+# ── Point cloud ──────────────────────────────────────────────
+group_size:  128
+num_group:   1024
+
+# ── Image / patch ────────────────────────────────────────────
+img_size:    224
+patch_size:  8
+seed:        42
+
+# ── Mask / target block (for JEPA sub-pass in combined mode) ─
+pred_mask_scale: [0.15, 0.2]
+aspect_ratio:    [0.75, 1.5]
+npred:           4
+min_keep:        6
+bg_ratio_threshold: 0.9
+bg_threshold:    30
+
+# ── EMA ──────────────────────────────────────────────────────
+ema_params_rgb: [0.995, 1.000]
+ema_params_3d:  [0.995, 1.000]
+warmup_epochs:  1
+usage_half_precision: false
+
+# ── Optimizer defaults ───────────────────────────────────────
+start_lr_rgb:   1.0e-6
+final_lr_rgb:   1.0e-6
+lr_rgb:         1.0e-5
+start_lr_xyz:   1.0e-6
+final_lr_xyz:   1.0e-6
+lr_xyz:         1.0e-5
+weight_decay:   0.01
+final_weight_decay: 0.1
+ipe_scale:      1.0
+
+# ── Coreset ──────────────────────────────────────────────────
+coreset_percentage_rgb: 0.1
+coreset_percentage_xyz: 0.1
+
+# ── Memory bank optimizer ────────────────────────────────────
+# LR used for opt_rgb_bank / opt_xyz_bank (AdamW)
+bank_lr: 1.0e-5   # all MVTec classes share 1e-5
+
+# ── Run mode ─────────────────────────────────────────────────
+# combined    : JEPA fine-tuning + Memory Bank update
+# only_jepa   : JEPA fine-tuning only
+# only_memory : Memory Bank update only
+mode: combined
+epoch_num: 1   # which Stage-1 epoch checkpoint to load (eyecandies only)
+
+# ── Per-class hyperparameter overrides ───────────────────────
+classes:
+  bagel:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  cable_gland:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  carrot:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  cookie:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  dowel:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  foam:
+    num_epochs: 5
+
+  peach:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  potato:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  rope:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5
+
+  tire:
+    num_epochs: 5
+    start_lr_xyz: 1.0e-6
+    final_lr_xyz: 1.0e-6
+    lr_xyz: 1.0e-5

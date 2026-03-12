@@ -1,0 +1,118 @@
+# ================================================================
+# train_adapt.py  --  Stage 1 (JEPA Adaptation) | Eyecandies
+# ================================================================
+
+# ── Dataset ─────────────────────────────────────────────────
+dataset_type: eyecandies
+dataset_path: ./datasets
+output_dir: ./outputs
+camera_param_route: ./datasets/eyecandies/
+
+# ── Checkpoint paths ─────────────────────────────────────────
+visual_encoder_ckpt_pth: ./checkpoints/vit_base_patch8_224_dino.pth
+point_encoder_ckpt_pth:  ./checkpoints/pointmae_pretrain.pth
+ckpt_subdir: 1st_stage_eyecandies
+
+# ── Model sizes ──────────────────────────────────────────────
+visual_encoder_size: base
+point_encoder_size:  base
+encoder_size:        vit_small
+predictor_depth:     2
+
+# ── Training defaults ────────────────────────────────────────
+batch_size:          1
+num_epochs:          5
+num_workers:         4
+accumulation_steps:  8
+k_shot:              -1
+
+# ── Point cloud ──────────────────────────────────────────────
+group_size:  128
+num_group:   1024
+
+# ── Image / patch ────────────────────────────────────────────
+img_size:    224
+patch_size:  8
+seed:        42
+
+# ── Mask / target block ──────────────────────────────────────
+pred_mask_scale: [0.15, 0.2]
+aspect_ratio:    [0.75, 1.5]
+npred:           4
+min_keep:        6
+bg_ratio_threshold: 0.95       # eyecandies default is 0.95
+bg_threshold:    90             # can be overridden per class
+
+# ── EMA ──────────────────────────────────────────────────────
+ema_params_rgb: [0.995, 1.000]
+ema_params_3d:  [0.995, 1.000]
+warmup_epochs:  1
+usage_half_precision: false
+
+# ── Optimizer defaults ───────────────────────────────────────
+start_lr_rgb:   1.0e-6
+final_lr_rgb:   1.0e-6
+lr_rgb:         1.0e-5
+start_lr_xyz:   1.0e-6
+final_lr_xyz:   1.0e-6
+lr_xyz:         1.0e-5
+weight_decay:   0.01
+final_weight_decay: 0.1
+ipe_scale:      1.0
+
+# ── Dataset-specific flags (auto-set) ────────────────────────
+#   lora_mode: lora            (eyecandies uses standard LoRA)
+#   use_rect_target: false
+#   use_bg_exclusion: false
+
+# ── Per-class hyperparameter overrides ───────────────────────
+classes:
+  CandyCane:
+    num_epochs: 5
+    bg_threshold: 90
+
+  ChocolateCookie:
+    num_epochs: 9
+    bg_threshold: 90
+
+  ChocolatePraline:
+    num_epochs: 4
+    bg_threshold: 70
+
+  Confetto:
+    num_epochs: 7
+    start_lr_xyz: 1.0e-5
+    final_lr_xyz: 1.0e-5
+    lr_xyz: 1.0e-4
+    npred: 4
+    bg_threshold: 85
+
+  GummyBear:
+    num_epochs: 4
+    start_lr_xyz: 1.0e-5
+    final_lr_xyz: 1.0e-5
+    lr_xyz: 1.0e-4
+    bg_threshold: 90
+
+  HazelnutTruffle:
+    num_epochs: 9
+    bg_threshold: 90
+
+  LicoriceSandwich:
+    num_epochs: 5
+    bg_threshold: 90
+
+  Lollipop:
+    num_epochs: 7
+    bg_threshold: 90
+
+  Marshmallow:
+    num_epochs: 1
+    start_lr_xyz: 1.0e-5
+    final_lr_xyz: 1.0e-5
+    lr_xyz: 1.0e-5
+    bg_threshold: 90
+
+  PeppermintCandy:
+    num_epochs: 10
+    bg_threshold: 90
