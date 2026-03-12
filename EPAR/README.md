@@ -110,6 +110,15 @@ https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md
 
 Download the following pretrained weights and place them in `checkpoints/`:
 
+| Model | Source |
+|-------|--------|
+| DINO ViT-B/8 | [M3DM](https://github.com/nomewang/M3DM) |
+| Point-MAE | [M3DM](https://github.com/nomewang/M3DM) |
+
+> Both weights are originally from [DINO](https://github.com/facebookresearch/dino) and [Point-MAE](https://github.com/Pang-Yatian/Point-MAE), respectively.
+> We refer to the [M3DM repository](https://github.com/nomewang/M3DM) for convenience.
+> Please change the filename into `vit_base_patch8_224_dino.pth` and `pointmae_pretrain.pth`, respectively.
+
 ```
 checkpoints/
 ├── vit_base_patch8_224_dino.pth
