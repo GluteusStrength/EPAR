@@ -1,6 +1,6 @@
 # EPAR — Embedding Predictive Architecture and Refinement for Multi-Modal Industrial Anomaly Detection
 
-EPAR is a two-stage multimodal anomaly detection framework that seperately adapts pretrained RGB (DINO ViT) and 3D point cloud (Point-MAE) encoders via a **Joint-Embedding Predictive Architecture (JEPA)**, followed by a **Noise-Suppression Netwrok (NSN)**.
+EPAR is a two-stage multimodal anomaly detection framework that seperately adapts pretrained RGB (DINO ViT) and 3D point cloud (Point-MAE) encoders via a **Joint-Embedding Predictive Architecture (JEPA)**, followed by a **Noise-Suppression Network (NSN)**.
 It supports both **MVTec-3D AD** and **Eyecandies** benchmarks from a single codebase.
 
 ---
